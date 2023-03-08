@@ -1,9 +1,9 @@
 from vector import Vector
 
-positiveSampleList = [Vector((1, 2))]
-negativeSampleList = [Vector((2, 3)), Vector((3, 2))]
+positiveSampleList = [Vector((4, 1, 2)), Vector((1, 3, 3))]
+negativeSampleList = [Vector((2, 2, 4))]
 lr = 1
-w, b = Vector((0, 0)), 0
+w, b = Vector((0, 0, 0)), 0
 
 flag = 0
 while (flag == 0):
