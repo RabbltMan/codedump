@@ -31,50 +31,63 @@ class TreeNodes:
         dim = list(x[dimension] for x in self.treeNodes)
         rank = list(np.argsort(dim))
         if (len(self.treeNodes) % 2 == 0):
-            return self.treeNodes[rank.index(len(rank)/2)]
+            return self.treeNodes[rank[int(len(rank)/2)]]
         else:
-            return self.treeNodes[rank.index((len(rank)-1)/2)]
+            return self.treeNodes[rank[int((len(rank)-1)/2)]]
 
 
-def buildTree(treeNodes: TreeNodes, fatherNode=None, childTreeDirection=None, Depth=0):
-    if len(treeNodes) == 0:
-        return None
+class BuildTree:
+    tree = list()
 
-    splitDimension = treeNodes.getSplitDimension(Depth)
-    rootNode = treeNodes.getMidpoint(splitDimension)
-    rootNode.father = fatherNode
-    if childTreeDirection == 'left':
-        fatherNode.childLeft = rootNode
-    if childTreeDirection == "right":
-        fatherNode.childRight = rootNode
+    def __init__(self, Nodes) -> None:
+        if isinstance(Nodes, list):
+            self.nodes = TreeNodes(Nodes)
+        elif isinstance(Nodes, TreeNodes):
+            self.nodes = Nodes
+        self.buildTree(self.nodes)
 
-    LeftChildren, RightChildren = [], []
-    Queue = [] 
-    for node in treeNodes:
-        if node[splitDimension] < rootNode[splitDimension]:
-            LeftChildren.append(node)
-        elif node[splitDimension] > rootNode[splitDimension]:
-            RightChildren.append(node)
-        elif node is rootNode:
-            continue
-        else:
-            Queue.append(node)
-    for node in Queue:
-        if len(RightChildren) >= len(LeftChildren):
-            LeftChildren.append(node)
-        else:
-            RightChildren.append(node)
-    depth = Depth + 1
-    leftChildBinaryTreeNodes = TreeNodes(LeftChildren)
-    print(f"leftsub, d={depth}, nodes: {leftChildBinaryTreeNodes}")
-    buildTree(leftChildBinaryTreeNodes, fatherNode=rootNode,
-              childTreeDirection='left', Depth=depth)
-    rightChildBinaryTreeNodes = TreeNodes(RightChildren)
-    print(f"rightsub, d={depth}, nodes: {rightChildBinaryTreeNodes}")
-    buildTree(rightChildBinaryTreeNodes, fatherNode=rootNode,
-              childTreeDirection='right', Depth=depth)
-    print(f"第{Depth}层, {rootNode}")
-    return rootNode
+    def __call__(self):
+        return self.tree
+    
+    def __repr__(self):
+        return str(self.tree)
+    
+    def __getitem__(self, key):
+        return self.tree[key]
 
+    def buildTree(self, treeNodes: TreeNodes, fatherNode=None, childTreeDirection=None, Depth=0):
+        if len(treeNodes) == 0:
+            return None
 
-buildTree(TreeNodes([Point(2, 1), Point(2, 2), Point(2, 4), Point(4, 3)]))
+        splitDimension = treeNodes.getSplitDimension(Depth)
+        rootNode = treeNodes.getMidpoint(splitDimension)
+        rootNode.father = fatherNode
+        if childTreeDirection == 'left':
+            fatherNode.childLeft = rootNode
+        if childTreeDirection == "right":
+            fatherNode.childRight = rootNode
+
+        LeftChildren, RightChildren = [], []
+        Queue = []
+        for node in treeNodes:
+            if node[splitDimension] < rootNode[splitDimension]:
+                LeftChildren.append(node)
+            elif node[splitDimension] > rootNode[splitDimension]:
+                RightChildren.append(node)
+            elif node is rootNode:
+                continue
+            else:
+                Queue.append(node)
+        for node in Queue:
+            if len(RightChildren) >= len(LeftChildren):
+                LeftChildren.append(node)
+            else:
+                RightChildren.append(node)
+        depth = Depth + 1
+        leftChildBinaryTreeNodes = TreeNodes(LeftChildren)
+        self.buildTree(leftChildBinaryTreeNodes, rootNode, 'left', depth)
+        rightChildBinaryTreeNodes = TreeNodes(RightChildren)
+        self.buildTree(rightChildBinaryTreeNodes, rootNode, 'right', depth)
+        print(f"第{Depth}层, {rootNode}")
+        self.tree.append(rootNode)
+        return rootNode
