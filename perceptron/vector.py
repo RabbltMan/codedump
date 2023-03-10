@@ -1,9 +1,6 @@
 class Vector:
-    def __init__(self, *coords):
-        if len(coords) > 1:
+    def __init__(self, *coords:int):
             self.vector = coords
-        else:
-            raise ValueError("Not a valid vector")
 
     def __add__(self, other):
         if (len(self.vector) != len(other.vector)):
@@ -13,7 +10,7 @@ class Vector:
             temp_result = list()
             for i in range(len(self.vector)):
                 temp_result.append(self.vector[i] + other.vector[i])
-            return Vector(tuple(temp_result))
+            return Vector(*temp_result)
 
     def __sub__(self, other):
         if (len(self.vector) != len(other.vector)):
@@ -23,7 +20,7 @@ class Vector:
             temp_result = list()
             for i in range(len(self.vector)):
                 temp_result.append(self.vector[i] - other.vector[i])
-            return Vector(tuple(temp_result))
+            return Vector(*temp_result)
 
     def __mul__(self, other):
         if isinstance(other, Vector):
@@ -39,24 +36,17 @@ class Vector:
             temp_result = list()
             for i in range(len(self.vector)):
                 temp_result.append(self.vector[i] * other)
-            return Vector(tuple(temp_result))
+            return Vector(*temp_result)
 
     def __rmul__(self, other):
         if (isinstance(other, int) or isinstance(other, float)):
             temp_result = list()
             for i in range(len(self.vector)):
                 temp_result.append(self.vector[i] * other)
-            return Vector(tuple(temp_result))
+            return Vector(*temp_result)
 
     def __repr__(self):
-        repr = "("
-        for i in range(len(self.vector)):
-            if (repr == "("):
-                repr += str(self.vector[i])
-            else:
-                repr += f", {str(self.vector[i])}"
-        repr += ')'
-        return repr
+        return str(self.vector)
     
     def __len__(self):
         return len(self.vector)
