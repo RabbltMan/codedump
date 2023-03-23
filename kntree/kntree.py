@@ -1,8 +1,8 @@
 from binarytree import *
 
-samples = [(3, 4), (4, 2), (1, 7), (2, 5), (3, 10), (5, 1), (1, 5)]
+samples = [(7, 2), (5, 4), (9, 6), (2, 3), (4, 7), (8, 1)]
 
 tree = BuildTree(samples)
 
-print(tree, type(tree), type(tree[0]))
-
+tree.show()
+print(tree[1], type(tree), type(tree[0]))

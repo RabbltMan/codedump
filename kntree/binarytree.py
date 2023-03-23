@@ -38,6 +38,7 @@ class TreeNodes:
 
 class BuildTree:
     tree = list()
+    LayerNodes = list()
 
     def __init__(self, Nodes) -> None:
         if isinstance(Nodes, list):
@@ -49,11 +50,29 @@ class BuildTree:
     def __call__(self):
         return self.tree
     
-    def __repr__(self):
-        return str(self.tree)
-    
     def __getitem__(self, key):
-        return self.tree[key]
+        self.show(0)
+        return self.LayerNodes[key]
+    
+    def show(self, show=1):
+        maxdepth = int(np.log2(len(self.tree) + 1))
+        self.LayerNodes = list()
+        root = []
+        for node in self.tree:
+            if (node.father == None):
+                root.append(node)
+                self.LayerNodes.append(root)
+                if show == 1:
+                    print(root)
+        for depth in range(1, maxdepth + 1):
+            curDepth = []
+            for node in root:
+                curDepth.append(node.childLeft)
+                curDepth.append(node.childRight)
+            root = curDepth
+            self.LayerNodes.append(root)
+            if show == 1:
+                print(root)
 
     def buildTree(self, treeNodes: TreeNodes, fatherNode=None, childTreeDirection=None, Depth=0):
         if len(treeNodes) == 0:
@@ -88,6 +107,6 @@ class BuildTree:
         self.buildTree(leftChildBinaryTreeNodes, rootNode, 'left', depth)
         rightChildBinaryTreeNodes = TreeNodes(RightChildren)
         self.buildTree(rightChildBinaryTreeNodes, rootNode, 'right', depth)
-        print(f"第{Depth}层, {rootNode}")
+        # print(f"第{Depth}层, {rootNode}")
         self.tree.append(rootNode)
         return rootNode
